@@ -13,6 +13,9 @@ Database description: **The database supports SheinApp, an e-commerce platform f
 <br>
 You can find below the database schema that was generated through Reverse Engineer and which contains all the tables and the relationships between them.
 
+![image](https://github.com/ElenaPdu/ITFactory_MySQL_Sample/assets/167423014/10020840-44cc-40d3-92cf-5a7a8dde8456)
+
+
 The tables are connected in the following way:
 
 <ul>
@@ -35,49 +38,49 @@ The tables are connected in the following way:
 
   The following instructions were written in the scope of CREATING the structure of the database (CREATE INSTRUCTIONS)
 
--- Creeaza o noua baza de date numita SheinApp. <br>
+-- Create a new database named SheinApp. <br>
 **CREATE DATABASE SheinApp;** <br>
   
--- Creeaza tabela "Categories" cu coloanele "category_id", "category_name" si "description" utilizate pentru stocarea categoriilor de produse disponibile in aplicatie. <br>
+-- Create the "Categories" table with the columns "category_id", "category_name" and "description" used for storing the categories of products available in the application. <br>
 **CREATE TABLE Categories (category_id INT AUTO_INCREMENT PRIMARY KEY, <br>
 category_name VARCHAR(255) NOT NULL, description TEXT);** <br>
   
 
--- Creeaza tabela "Products" cu coloanele "product_id", "product_name", "category_id", "price" si "stock_quantity". 
-"category_id" este o cheie externa care se refera la "category_id" din tabela "Categories". <br>
+-- Create the "Products" table with the columns "product_id", "product_name", "category_id", "price" and "stock_quantity".
+"category_id" is a foreign key referring to "category_id" in the "Categories" table.<br>
 **CREATE TABLE Products (product_id INT AUTO_INCREMENT PRIMARY KEY, product_name VARCHAR(255) NOT NULL, category_id INT, price DECIMAL(10, 2), FOREIGN KEY (category_id) REFERENCES Categories(category_id));** <br>
 
--- Creeaza tabela "Customers" pentru a stoca informatiile despre clienti, inclusiv "customer_id", "first_name", "last_name" si "email". <br>
+-- Create the "Customers" table to store customer information, including "customer_id", "first_name", "last_name" and "email". <br>
 **CREATE TABLE Customers (customer_id INT AUTO_INCREMENT PRIMARY KEY, <br>
 first_name VARCHAR(50), last_name VARCHAR(50), email VARCHAR(100));** <br>
 
 
--- Creeaza tabela "Orders" pentru a gestiona comenzile clientilor, inclusiv "order_id", "customer_id", "order_date" si "total_amount". <br>
+-- Create the "Orders" table to manage customer orders, including "order_id", "customer_id", "order_date" and "total_amount". <br>
 **CREATE TABLE Orders (order_id INT AUTO_INCREMENT PRIMARY KEY, customer_id INT, order_date DATE, total_amount DECIMAL(10, 2), FOREIGN KEY (customer_id) REFERENCES Customers(customer_id));** <br>
 
--- Creeaza tabela "OrderDetails" pentru a tine evidenta detaliilor comenzilor, inclusiv "order_detail_id", "order_id", "product_id", "quantity" si "price". 
-"order_id" si "product_id" sunt chei externe care se refera la "order_id" si "product_id" din tabelele "Orders" si "Products". <br>
+-- Create the "OrderDetails" table to track order details, including "order_detail_id", "order_id", "product_id", "quantity" and "price."
+"order_id" and "product_id" are foreign keys referring to "order_id" and "product_id" in the "Orders" and "Products" tables. <br>
 **CREATE TABLE OrderDetails (order_detail_id INT AUTO_INCREMENT PRIMARY KEY, order_id INT, product_id INT, quantity INT, price DECIMAL(10, 2), FOREIGN KEY (order_id) REFERENCES Orders(order_id), FOREIGN KEY (product_id) REFERENCES Products(product_id));** <br>
 
   After the database and the tables have been created, a few ALTER instructions were written in order to update the structure of the database, as described below:
 
--- Adauga o noua coloana "stock_quantity" la tabela "Products" pentru a tine evidenta stocului disponibil pentru fiecare produs. <br>
+-- Add a new column "stock_quantity" to the "Products" table to track the available stock for each product. <br>
 **ALTER TABLE Products <br>
 ADD COLUMN stock_quantity INT AFTER price;** <br>
 
--- Adauga o noua coloana "category_code" la tabela "Categories" pentru a stoca un cod unic pentru fiecare categorie. <br>
+-- Add a new column "category_code" to the "Categories" table to store a unique code for each category. <br>
 **ALTER TABLE Categories <br>
 ADD COLUMN category_code VARCHAR(10) AFTER description;** <br>
 
--- Schimba numele coloanei "stock_quantity" in "available_quantity" pentru a face schema mai explicita. <br>
+-- Rename the column "stock_quantity" to "available_quantity" to make the schema more explicit. <br>
 **ALTER TABLE Products <br>
 CHANGE COLUMN stock_quantity available_quantity INT;** <br>
 
--- Adauga o noua coloana "order_status" la tabela "Orders" cu valoarea implicita "pending" pentru a tine evidenta starii comenzilor. <br>
+-- Add a new column "order_status" to the "Orders" table with a default value of "pending" to track the status of orders. <br>
 **ALTER TABLE Orders <br>
 ADD COLUMN order_status VARCHAR(20) DEFAULT 'pending';** <br>
 
--- Modifica lungimea coloanei "email" din "VARCHAR(100)" in "VARCHAR(255)" pentru a permite adrese de email mai lungi. <br>
+-- Modify the length of the "email" column from "VARCHAR(100)" to "VARCHAR(255)" to allow longer email addresses. <br>
 **ALTER TABLE Customers <br>
 MODIFY COLUMN email VARCHAR(255);** <br>
  
@@ -89,17 +92,17 @@ MODIFY COLUMN email VARCHAR(255);** <br>
 
   Below you can find all the insert instructions that were created in the scope of this project:
 
--- Insereaza date in tabela "Categories". Coloanele implicate sunt "category_name" si "description". 
-Se adauga trei randuri in tabela "Categories", fiecare rand reprezentand o categorie diferita de produse: "Electronics" pentru dispozitive si accesorii electronice, 
-"Clothing" pentru articole de imbracaminte pentru barbati, femei si copii, si "Home Decor" pentru obiecte decorative pentru designul interior al casei. <br>
+-- Insert data into the "Categories" table. The involved columns are "category_name" and "description". 
+Three rows are added to the "Categories" table, each representing a different category of products: "Electronics" for electronic devices and accessories, "Clothing" for men's, women's and children's clothing items, 
+and "Home Decor" for decorative objects for the interior design of the house. <br>
 **INSERT INTO Categories (category_name, description) <br>
 VALUES <br>
 ('Electronics', 'Products related to electronic devices and accessories'), <br>
 ('Clothing', 'Clothing items for men, women, and children'), <br>
 ('Home Decor', 'Decorative items for home interior design');** <br>
 
--- Insereaza date in tabela "Products". Coloanele implicate sunt "product_name", "category_id", "price" si "available_quantity". 
-Se adauga trei produse in tabela "Products", fiecare fiind asociat cu o anumita categorie prin intermediul coloanei "category_id". <br>
+-- Insert data into the "Products" table. The involved columns are "product_name", "category_id", "price" and "available_quantity." 
+Three products are added to the "Products" table, each associated with a specific category through the "category_id" column. <br>
 **INSERT INTO Products (product_name, category_id, price, available_quantity) <br>
 VALUES <br>
 ('Smartphone', 1, 799.99, 100), <br>
@@ -111,7 +114,7 @@ VALUES <br>
 ('Desk Lamp', 3, 34.99, 75), <br>
 ('Mouse', 1, 12.99, 100);**  <br>
 
--- Insereaza date in tabela "Customers". Coloanele implicate sunt "first_name", "last_name" si "email". <br>
+-- Insert data into the "Customers" table. The involved columns are "first_name", "last_name", and "email". <br>
 **INSERT INTO Customers (first_name, last_name, email) <br>
 VALUES  <br>
 ('Ana', 'Popescu', 'ana.popescu@shopping.ro'), <br>
@@ -120,8 +123,8 @@ VALUES  <br>
 ('Ion', 'Cretu', 'ion.cretu@shopping.ro'), <br>
 ('Florina', 'Paler', 'florina.paler@shopping.ro');** <br>
 
--- Insereaza date in tabela "Orders". Coloanele implicate sunt "customer_id", "order_date", "total_amount" si "order_status". 
-Se adauga doua comenzi in tabela "Orders", fiecare comanda fiind asociata cu un anumit client prin intermediul coloanei "customer_id". <br>
+-- Insert data into the "Orders" table. The involved columns are "customer_id", "order_date", "total_amount", and "order_status". 
+Two orders are added to the "Orders" table, each order being associated with a specific customer through the "customer_id" column. <br>
 **INSERT INTO Orders (customer_id, order_date, total_amount, order_status) <br>
 VALUES <br>
 (1, '2024-03-01', 299.98, 'completed'), <br>
@@ -134,12 +137,12 @@ VALUES <br>
 (3, '2023-01-08', 50.00, 'completed'), <br>
 (4, '2023-01-09', 400.00, 'processing');** <br>
 
--- Adauga trei comenzi suplimentare in tabela "Orders". Desi nu este specificata starea comenzilor, acestea sunt considerate implicit ca fiind in "pending", deoarece nu este specificat altfel. 
-Aceste comenzi sunt asociate cu diferiti clienti si au date de comanda si sume totale diferite. <br>
+-- Insert three additional orders to the "Orders" table. Although the order status is not specified, they are considered implicitly as "pending" since it's not specified otherwise. 
+These orders are associated with different customers and have different order dates and total amounts. <br>
 **INSERT INTO Orders (customer_id, order_date, total_amount) <br>
 VALUES (1, '2023-03-20', 120.50), (2, '2023-03-21', 85.75), (3, '2023-03-22', 200.00);** <br>
 
--- Adauga inregistrari in tabela "OrderDetails". Fiecare inregistrare este definita de valorile specificate intre paranteze, cu fiecare set de valori separat prin virgula. <br>
+-- Insert records into the "OrderDetails" table. Each record is defined by the values specified within parentheses, with each set of values separated by a comma. <br>
 **INSERT INTO OrderDetails (order_id, product_id, quantity, price) <br>
 VALUES <br>
 (1, 1, 2, 159.98), <br>
@@ -158,20 +161,20 @@ VALUES <br>
 
   After the insert, in order to prepare the data to be better suited for the testing process, I updated some data in the following way:
 
--- Actualizeaza descrierea categoriei cu numele 'Home Decor' in tabelul Categories. Ea schimba descrierea existenta a acestei categorii in 'Products for home decoration'. 
-Clauza WHERE specifica ca actualizarea se aplica numai in cazul in care numele categoriei este 'Home Decor'. <br>
+-- Update the description of the category with the name 'Home Decor' in the Categories table. It changes the existing description of this category to 'Products for home decoration'. 
+The WHERE clause specifies that the update applies only if the category name is 'Home Decor'. <br>
 **UPDATE Categories <br>
 SET description = 'Products for home decoration' <br>
 WHERE category_name = 'Home Decor';** <br>
 
--- Actualizeaza pretul produsului cu numele 'T-shirt' in tabelul Products. Ea schimba pretul existent al acestui produs in 29.99. 
-Clauza WHERE specifica ca actualizarea se aplica numai in cazul in care numele produsului este 'T-shirt'. <br>
+-- Update the price of the product with the name 'T-shirt' in the Products table. It changes the existing price of this product to 29.99. 
+The WHERE clause specifies that the update applies only if the product name is 'T-shirt'. <br>
 **UPDATE Products <br>
 SET price = 29.99 <br>
 WHERE product_name = 'T-shirt';** <br>
 
--- Actualizeaza numele categoriei cu id-ul 3001 in tabelul Categories. Ea schimba numele existent al acestei categorii in 'Electronics'. 
-Clauza WHERE specifica ca actualizarea se aplica numai in cazul in care id-ul categoriei este 3001. <br>
+-- Update the category name with the id 3001 in the Categories table. It changes the existing name of this category to 'Electronics'. 
+The WHERE clause specifies that the update applies only if the category id is 3001. <br>
 **UPDATE Categories <br>
 SET category_name = 'Electronics' <br>
 WHERE category_id = 3001;** <br>
@@ -180,90 +183,104 @@ WHERE category_id = 3001;** <br>
 
 After the testing process, I deleted the data that was no longer relevant in order to preserve the database clean: 
 
--- Sterge inregistrarile din tabela Categories unde category_name este egal cu 'Products for home decoration'. 
-Cu alte cuvinte, aceasta va sterge categoria cu numele specificat din tabelul Categories. <br>
+-- Delete the records from the Categories table where category_name is equal to 'Products for home decoration'. 
+In other words, this will delete the category with the specified name from the Categories table. <br>
 **DELETE FROM Categories <br>
 WHERE category_name = 'Products for home decoration';** <br>
 
--- Sterge inregistrarile din tabela Products unde product_name este egal cu 'Table Lamp'. Va sterge produsul specificat din tabelul Products. <br>
+-- Delete the records from the Products table where product_name is equal to 'Table Lamp'. This will delete the specified product from the Products table. <br>
 **DELETE FROM Products <br>
 WHERE product_name = 'Table Lamp';** <br>
 
--- Sterge inregistrarea din tabela Orders unde order_id este egal cu 2. Va sterge comanda cu ID-ul specificat din tabelul Orders. <br>
+-- Delete the record from the Orders table where order_id is equal to 2. This will delete the order with the specified ID from the Orders table. <br>
 **DELETE FROM Orders <br>
 WHERE order_id = 2;** <br>
 
--- Sterge toate inregistrarile din tabela Orders care au customer_id egal cu 2. Va sterge toate comenzile asociate clientului cu ID-ul specificat din tabelul Orders. <br>
+-- Delete all records from the Orders table where customer_id is equal to 2. This will delete all orders associated with the customer with the specified ID from the Orders table. <br>
 **DELETE FROM Orders <br>
 WHERE customer_id = 2;** <br>
 
--- Sterge inregistrarea din tabela Customers unde customer_id este egal cu 2. Va sterge clientul cu ID-ul specificat din tabelul Customers. <br>
+-- Delete the record from the Customers table where customer_id is equal to 2. This will delete the customer with the specified ID from the Customers table. <br>
 **DELETE FROM Customers <br>
 WHERE customer_id = 2;** <br>
 
 In order to simulate various scenarios that might happen in real life I created the following queries that would cover multiple potential real-life situations:
 
--- Selecteaza toate produsele cu un pret mai mare de 100 si care sunt in categoria cu ID-ul 1. <br>
-**SELECT * FROM Products <br>
-WHERE price > 100 AND category_id = 1;** <br>
+-- Select all products with a price greater than 100 and which are in the category with ID 1. <br>
+```sql
+SELECT * FROM Products <br>
+WHERE price > 100 AND category_id = 1;
+```
 
--- Selecteaza toate comenzile care au data de comanda anterioara datei de 1 ianuarie 2023 sau care au un total mai mic de 500. <br>
-**SELECT * FROM Orders <br>
-WHERE order_date < '2023-01-01' OR total_amount < 500;** <br>
+-- Select all orders that have an order date prior to January 1, 2023 or have a total amount less than 500. <br>
+```sql
+SELECT * FROM Orders WHERE order_date < '2023-01-01' OR total_amount < 500;
+```
 
--- Selecteaza toate produsele care nu sunt in categoria cu ID-ul 1. <br>
-**SELECT * FROM Products <br>
-WHERE NOT category_id = 1;** <br>
+-- Select all products that are not in the category with ID 1. <br>
+```sql
+SELECT * FROM Products WHERE NOT category_id = 1;
+```
 
--- Selecteaza toate produsele ale caror nume contine cuvantul 'phone'. <br>
-**SELECT * FROM Products <br>
-WHERE product_name LIKE '%phone%';** <br>
+-- Select all products whose names contain the word 'phone'. <br>
+```sql
+SELECT * FROM Products WHERE product_name LIKE '%phone%';
+```
 
--- Aceasta interogare foloseste un inner join pentru a combina datele din tabelele Orders si OrderDetails pe baza valorilor egale ale coloanei order_id. <br>
-**SELECT Orders.order_id, Orders.order_date, OrderDetails.product_id, OrderDetails.quantity <br>
-FROM Orders <br>
-INNER JOIN OrderDetails ON Orders.order_id = OrderDetails.order_id;** <br>
+-- This query uses an inner join to combine the data from the Orders and OrderDetails tables based on the equal values of the order_id column. <br>
+```sql
+SELECT Orders.order_id, Orders.order_date, OrderDetails.product_id, OrderDetails.quantity
+FROM Orders INNER JOIN OrderDetails ON Orders.order_id = OrderDetails.order_id;
+```
 
--- Aceasta interogare foloseste un left join pentru a afisa toate inregistrarile din tabela Orders si doar inregistrările din OrderDetails care au corespondenta cu Orders. <br>
-**SELECT Orders.order_id, Orders.order_date, OrderDetails.product_id, OrderDetails.quantity <br>
-FROM Orders <br>
-LEFT JOIN OrderDetails ON Orders.order_id = OrderDetails.order_id;** <br>
+-- This query uses a left join to display all records from the Orders table and only the records from the OrderDetails table that have a match with Orders. <br>
+```sql
+SELECT Orders.order_id, Orders.order_date, OrderDetails.product_id, OrderDetails.quantity
+FROM Orders LEFT JOIN OrderDetails ON Orders.order_id = OrderDetails.order_id;
+```
 
--- Aceasta interogare foloseste un right join pentru a afisa toate inregistrarile din tabela OrderDetails si doar inregistrarile din Orders care au corespondenta cu OrderDetails. <br>
-**SELECT Orders.order_id, Orders.order_date, OrderDetails.product_id, OrderDetails.quantity <br>
-FROM Orders <br>
-RIGHT JOIN OrderDetails ON Orders.order_id = OrderDetails.order_id;** <br>
+-- This query uses a right join to display all records from the OrderDetails table and only the records from the Orders table that have a match with OrderDetails. <br>
+```sql
+SELECT Orders.order_id, Orders.order_date, OrderDetails.product_id, OrderDetails.quantity
+FROM Orders RIGHT JOIN OrderDetails ON Orders.order_id = OrderDetails.order_id;
+```
 
--- Aceasta interogare efectueaza un cross join intre tabelele Orders si Products, returnand toate combinatiile posibile intre inregistrarile din cele doua tabele. <br>
-**SELECT Orders.order_id, Orders.order_date, Products.product_name, Products.price <br>
-FROM Orders <br>
-CROSS JOIN Products;** <br> 
+-- This query performs a cross join between the Orders and Products tables, returning all possible combinations between the records from the two tables. <br>
+```sql
+SELECT Orders.order_id, Orders.order_date, Products.product_name, Products.price
+FROM Orders CROSS JOIN Products;
+```
 
--- Aceasta interogare calculeaza numarul de produse din fiecare categorie si le grupeaza dupa numele categoriei. <br>
-**SELECT Categories.category_name, COUNT(Products.product_id) AS num_of_products <br>
-FROM Categories <br>
-INNER JOIN Products ON Categories.category_id = Products.category_id <br>
-GROUP BY Categories.category_name;** <br>
+-- This query calculates the number of products in each category and groups them by the category name. <br>
+```sql
+SELECT Categories.category_name, COUNT(Products.product_id) AS num_of_products
+FROM Categories INNER JOIN Products ON Categories.category_id = Products.category_id
+GROUP BY Categories.category_name;
+```
 
--- Aceasta interogare calculeaza numarul de produse din fiecare categorie si le grupeaza dupa nume de categorie, dar returneaza doar categoriile cu mai mult de 0 produse. <br>
-**SELECT Categories.category_name, COUNT(Products.product_id) AS num_of_products <br>
-FROM Categories <br>
-INNER JOIN Products ON Categories.category_id = Products.category_id <br>
-GROUP BY Categories.category_name <br>
-HAVING COUNT(Products.product_id) > 0;** <br>
+-- This query calculates the number of products in each category and groups them by category name, but returns only the categories with more than 0 products. <br>
+```sql
+SELECT Categories.category_name, COUNT(Products.product_id) AS num_of_products 
+FROM Categories 
+INNER JOIN Products ON Categories.category_id = Products.category_id 
+GROUP BY Categories.category_name 
+HAVING COUNT(Products.product_id) > 0;
+```
 
--- Aceasta interogare selecteaza toate comenzile pentru clientii cu numele de familie 'Popescu', folosind o subinterogare pentru a obtine id-urile clientilor cu acest nume de familie din tabela Customers. <br>
-**SELECT * FROM Orders <br>
-WHERE customer_id IN (SELECT customer_id FROM Customers WHERE last_name = 'Popescu');** <br>
+-- This query selects all orders for customers with the last name 'Popescu', using a subquery to obtain the IDs of the customers with this last name from the Customers table. <br>
+```sql
+SELECT * FROM Orders 
+WHERE customer_id IN (SELECT customer_id FROM Customers WHERE last_name = 'Popescu');
+```
 
 </ol>
 
 <li>Conclusions</li> <br>
 
-**Am invatat sa proiectez si sa implementez baze de date, sa fac operatii de creare, actualizare si stergere a structurii si sa manipulez datele folosind instructiuni DDL, DML si DQL.** <br>
+**I learned how to design and implement databases, perform operations to create, update, and delete structures, and manipulate data using DDL, DML, and DQL statements.** <br>
 
-**Am lucrat cu interogari SQL pentru a extrage date si am explorat diverse tehnici de filtrare, imbinare si agregare a datelor. Am inteles importanta testarii riguroase pentru asigurarea integritatii si consistentei datelor.** <br>
+**I worked with SQL queries to extract data and explored various techniques for filtering, joining, and aggregating data. I understood the importance of rigorous testing to ensure data integrity and consistency.** <br>
 
-**In concluzie, acest proiect a fost o experienta valoroasa care m-a ajutat sa aplic cunostintele esentiale in testarea si gestionarea bazelor de date dobandite in cadrul cursului de testare, pregatindu-ma pentru viitoarele proiecte si cariera in testarea software.** <br> 
+**In conclusion, this project was a valuable experience that helped me apply essential knowledge in database testing and management acquired during the testing course, preparing me for future projects and a career in software testing.** <br> 
 
 </ol>
